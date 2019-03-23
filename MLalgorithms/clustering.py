@@ -2,8 +2,8 @@ import numpy as np
 from copy import deepcopy
 from sklearn.metrics.pairwise import rbf_kernel as rbf
 from sklearn.neighbors import NearestNeighbors as nn
-
-def kmeans(data, num_clusters = 2, tolerance=0.0001, max_iter = 300, init_seed = None):
+import MLalgorithms.clustering_utility as util
+def Kmeans(data, num_clusters = 2, tolerance=0.0001, max_iter = 300, init_seed = None):
     iter_num = 0
     # Number of training data
     n = data.shape[0]
@@ -15,6 +15,16 @@ def kmeans(data, num_clusters = 2, tolerance=0.0001, max_iter = 300, init_seed =
         mean = np.mean(data, axis = 0)
         std = np.std(data, axis = 0)
         centroids = np.random.randn(num_clusters,c)*std + mean
+    elif(init_seed == 'naive_sharding'):
+        centroids = util.naive_sharding(data,num_clusters)
+    #elif(init_seed == 'k++'):
+        # mean = np.mean(data, axis = 0)
+        # std = np.std(data, axis = 0)
+        # centroids[0] = np.random.randn(num_clusters,c)*std + mean
+        # for i in range(data.shape[0]):
+        #     distances[:,i] = np.linalg.norm(data - centroids[0], axis=1)
+        # np.argmax(distances, axis = 1)
+
     else:
         centroids = init_seed
         
@@ -39,8 +49,10 @@ def kmeans(data, num_clusters = 2, tolerance=0.0001, max_iter = 300, init_seed =
         old_centroids = deepcopy(new_centroids)
         # Calculate mean for every cluster and update the center
         for i in range(num_clusters):
+            if not data[clusters == i].any() and init_seed is None:
+                new_centroids[i] = np.random.randn(1,c)*std + mean
+                continue
             new_centroids[i] = np.mean(data[clusters == i], axis=0)
-        np.nan_to_num(new_centroids[i], copy=False)
         error = np.linalg.norm(new_centroids - old_centroids)
         
     return new_centroids,clusters,error,iter_num
@@ -62,5 +74,5 @@ def SpectralClustering(data, num_clusters=2, affinity='rbf', gamma=1.0, num_neig
     eig_vectors = np.real(eig_vectors[:,idx])
     rows_norm = np.linalg.norm(eig_vectors, axis=1)
     normalized_eig_vectors = (eig_vectors.T / rows_norm).T
-    centroids,clusters = kmeans(normalized_eig_vectors, num_clusters=num_clusters)
+    centroids,clusters,error,iter_num = Kmeans(normalized_eig_vectors, num_clusters=num_clusters)
     return normalized_eig_vectors,centroids,clusters

@@ -1,18 +1,25 @@
 import pandas as pd 
 import numpy as np
+from sklearn.metrics.cluster import contingency_matrix
 def Fmeasure(clusters,partitions):
     F= 0
-    contigencyTable = pd.crosstab(clusters, partitions)
+    contigencyTable =contingency_matrix(clusters,partitions)
+    idx=contigencyTable.max(axis=1)
     for i in range(contigencyTable.shape[0]):
-        idx=contigencyTable.idxmax(1)
-        F += (2/contigencyTable.shape[0]) * contigencyTable[i][idx[i]]/(pd.DataFrame.sum(contigencyTable[i],axis=0)+pd.DataFrame.sum(contigencyTable[:][idx[i]]))
-    return F
-
+        nij = contigencyTable.max(axis=1)
+        ni = np.sum(contigencyTable[i])
+        ji = contigencyTable[:,idx[i]]
+        mji = np.sum(ji)
+        F += 2 * nij/(ni+mji)
+    return F/contigencyTable.shape[0]
 
 def ConditionalEntropy(clusters,partitions):
-    contigencyTable = pd.crosstab(clusters, partitions)
-    H = 0
+    contigencyTable = contingency_matrix(clusters, partitions)
+    H = []
+    Hci = 0
     for i in range(contigencyTable.shape[0]):
-        ni=pd.DataFrame.sum(contigencyTable[i],axis=0)
-        H += -(1/ni*contigencyTable.shape[0]) *np.sum(contigencyTable[i]*np.log2(contigencyTable[i]/ni))
+        ni = np.sum(contigencyTable[i])
+        for j in range(contigencyTable.shape[1]):
+            Hci -= contigencyTable[i][j]/ni * np.log10(contigencyTable[i][j]/ni)
+        H.append(Hci)
     return H
