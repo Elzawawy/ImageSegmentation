@@ -180,7 +180,7 @@ Algorithm
 LDA algorithm steps and procedure is provided in Figure 10 which is
 taken from [3] from Chapter 16.
 
-![](Figures/spectral.png){width="\textwidth"}
+![](Figures/spectral.png)
 
 To perform a spectral clustering we need 3 main steps:
 1.Create a similarity graph between our N objects to cluster.
@@ -219,9 +219,9 @@ good enough. We figure that choosing another picture can be actually
 obtain better results but leave it as a future work on the project. The
 results of this approach is shown in figure 11 below.
 
-![](Figures/spectral_result1.png){width="0.3\linewidth"}
+![](Figures/spectral_result1.png)
 
-![](Figures/spectral_result2.png){width="0.3\linewidth"}
+![](Figures/spectral_result2.png)
 
 Beating the memory limits: Annoy and Sparsity
 ---------------------------------------------
@@ -254,7 +254,7 @@ data (only 5 non-zero values in each row of the image) and then we run
 our algorithm accordingly. The results of this approach is found below
 in figure 12 below.
 
-![](Figures/spectral_result3.png){width="20.00000%"}
+![](Figures/spectral_result3.png)
 
 Adding spices to the mix: Spatial Feature encoding in KMeans
 ============================================================
@@ -276,7 +276,7 @@ mathematical background and results on the process can be found there.
 Our results of the implementation to such additive feature is shown
 below in figure 13.
 
-![](Figures/spatial_result1.png){width="60.00000%"}
+![](Figures/spatial_result1.png)
 
 Future Improvements and Goals
 =============================
